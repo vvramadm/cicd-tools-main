@@ -1,11 +1,12 @@
 #!/bin/bash
 
 #resize disk from 20GB to 50GB
-growpart /dev/nvme0n1 4
+growpart /dev/nvme0n1 1
 
 lvextend -L +10G /dev/mapper/RootVG-homeVol
 lvextend -L +10G /dev/mapper/RootVG-varVol
 lvextend -l +100%FREE /dev/mapper/RootVG-varTmpVol
+
 
 xfs_growfs /home
 xfs_growfs /var/tmp

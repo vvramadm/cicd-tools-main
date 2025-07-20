@@ -1,7 +1,7 @@
-module "jenkins" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
+resource "aws_instance" "jenkins" {
+  #source  = "terraform-aws-modules/ec2-instance/aws"
 
-  name = "jenkins"
+  #name = "jenkins"
 
   instance_type          = "t3.small"
   vpc_security_group_ids = ["sg-0df8cc968cef6d58b"] #replace your SG
@@ -20,17 +20,17 @@ module "jenkins" {
   #   }
   # ]
 
-  root_block_device = {
+  root_block_device  {
   volume_size           = 50
   volume_type           = "gp3"
   delete_on_termination = true
-}
+} 
 }
 
-module "jenkins_agent" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
+ resource "aws_instance" "jenkins_agent" {
+  #source  = "terraform-aws-modules/ec2-instance/aws"
 
-  name = "jenkins-agent"
+  #name = "jenkins-agent"
 
   instance_type          = "t3.small"
   vpc_security_group_ids = ["sg-0df8cc968cef6d58b"] #replace your SG
@@ -41,14 +41,14 @@ module "jenkins_agent" {
     Name = "jenkins-agent"
   }
 
-  # root_block_device = [ {
-  #     volume_size = 50       # Size of the root volume in GB
-  #     volume_type = "gp3"    # General Purpose SSD (you can change it if needed)
-  #     delete_on_termination = true  # Automatically delete the volume when the instance is terminated
-  #   }
-  # ]
+#   # root_block_device = [ {
+#   #     volume_size = 50       # Size of the root volume in GB
+#   #     volume_type = "gp3"    # General Purpose SSD (you can change it if needed)
+#   #     delete_on_termination = true  # Automatically delete the volume when the instance is terminated
+#   #   }
+#   # ]
 
-  root_block_device = {
+  root_block_device  {
   volume_size           = 50
   volume_type           = "gp3"
   delete_on_termination = true
@@ -67,7 +67,7 @@ module "records" {
       type    = "A"
       ttl     = 1
       records = [
-        module.jenkins.public_ip
+        aws_instance.jenkins.public_ip
       ]
       allow_overwrite = true
     },
@@ -76,7 +76,7 @@ module "records" {
       type    = "A"
       ttl     = 1
       records = [
-        module.jenkins_agent.private_ip
+        aws_instance.jenkins_agent.private_ip
       ]
       allow_overwrite = true
     }
